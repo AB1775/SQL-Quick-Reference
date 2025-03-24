@@ -306,14 +306,13 @@ SELECT city, population FROM north_american_cities
 ```
 ## SQL Lesson 7: OUTER JOINs
 ##### Table: Buildings (Read-Only)
--------------------------------
-| building_name  |	capacity  |
--------------------------------
-| 1e	         |    24      |
-| 1w 	         |    32      | 
-| 2e	         |    16      |
-| 2w	         |    20      |
--------------------------------
+| building_name | capacity |
+|---------------|----------|
+| 1e            | 24       |
+| 1w            | 32       |
+| 2e            | 16       |
+| 2w            | 20       |
+
 ##### Table: Employees (Read-Only)
 ------------------------------------------------------
 | role      | name        | building | years_employed |
