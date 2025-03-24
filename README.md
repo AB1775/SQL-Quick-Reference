@@ -53,6 +53,14 @@ This project serves as:
 ```
 
 ## SQL Lesson 2: Queries with Constraints (Pt. 1)
+### Logical Operations
+ Operator             | Condition                                            | SQL Example                     |
+|---------------------|------------------------------------------------------|---------------------------------|
+| =, !=, <, <=, >, >= | Standard numerical operators                         | `col_name != 4`                 |
+| BETWEEN … AND …     | Number is within range of two values (inclusive)     | `col_name BETWEEN 1.5 AND 10.5` |
+| NOT BETWEEN … AND … | Number is not within range of two values (inclusive) | `col_name NOT BETWEEN 1 AND 10` |
+| IN (…)              | Number exists in a list                              | `col_name IN (2, 4, 6)`         |
+| NOT IN (…)          | Number does not exist in a list                      | `col_name NOT IN (1, 3, 5)`     |
 ##### Table: Movies
 --------------------------------------------------------------------
 | id  | title           | director         | year | length_minutes |
@@ -90,6 +98,17 @@ This project serves as:
         WHERE id BETWEEN 1 AND 5;
 ```
 ## SQL Lesson 3: Queries with Constraints (Pt. 2)
+### String Matching Operators
+| Operator     | Condition                                                                  | Example                                                          |
+|--------------|----------------------------------------------------------------------------|------------------------------------------------------------------|
+| =            | Case sensitive exact string comparison                                     | `col_name = "abc"`                                               |
+| != or <>     | Case sensitive exact string inequality comparison                          | `col_name != "abcd"`                                             |
+| LIKE         | Case insensitive exact string comparison                                   | `col_name LIKE "ABC"`                                            |
+| NOT LIKE     | Case insensitive exact string inequality comparison                        | `col_name NOT LIKE "ABCD"`                                       |
+| %            | Matches a sequence of zero or more characters (used with LIKE or NOT LIKE) | `col_name LIKE "%AT%"` (matches "AT", "ATTIC", "CAT", or "BATS") |
+| _            | Matches a single character (used with LIKE or NOT LIKE)                    | `col_name LIKE "AN_"` (matches "AND", but not "AN")              |
+| IN (…)       | String exists in a list                                                    | `col_name IN ("A", "B", "C")`                                    |
+| NOT IN (…)   | String does not exist in a list                                            | `col_name NOT IN ("D", "E", "F")`                                |
 ##### Table: Movies
 --------------------------------------------------------------------------
 | id  | title                 | director         | year | length_minutes |
@@ -225,3 +244,121 @@ SELECT city, population FROM north_american_cities
         ORDER BY population DESC
         LIMIT 2 OFFSET 2;
 ```
+## SQL Lesson 6: Multi-Table Queries with JOINs
+##### Table: Movies (Read-Only)
+--------------------------------------------------------------------------
+| id  | title                 | director         | year | length_minutes |
+|-----|-----------------------|------------------|------|----------------|
+| 1   | Toy Story             | John Lasseter    | 1995 | 81             |
+| 2   | A Bug's Life          | John Lasseter    | 1998 | 95             |
+| 3   | Toy Story 2           | John Lasseter    | 1999 | 93             |
+| 4   | Monsters, Inc.        | Pete Docter      | 2001 | 92             |
+| 5   | Finding Nemo          | Andrew Stanton   | 2003 | 107            |
+| 6   | The Incredibles       | Brad Bird        | 2004 | 116            |
+| 7   | Cars                  | John Lasseter    | 2006 | 117            |
+| 8   | Ratatouille           | Brad Bird        | 2007 | 115            |
+| 9   | WALL-E                | Andrew Stanton   | 2008 | 104            |
+| 10  | Up                    | Pete Docter      | 2009 | 101            |
+| 11  | Toy Story 3           | Lee Unkrich      | 2010 | 103            |
+| 12  | Cars 2                | John Lasseter    | 2011 | 120            |
+| 13  | Brave                 | Brenda Chapman   | 2012 | 102            |
+| 14  | Monsters University   | Dan Scanlon      | 2013 | 110            |
+--------------------------------------------------------------------------
+##### Table: Boxoffice (Read-Only)
+------------------------------------------------------------
+| movie_id | rating | domestic_sales | international_sales |
+|----------|--------|----------------|---------------------|
+| 5        | 8.2    | 380843261      | 555900000           |
+| 14       | 7.4    | 268492764      | 475066843           |
+| 8        | 8.0    | 206445654      | 417277164           |
+| 12       | 6.4    | 191452396      | 368400000           |
+| 3        | 7.9    | 245852179      | 239163000           |
+| 6        | 8.0    | 261441092      | 370001000           |
+| 9        | 8.5    | 223808164      | 297503696           |
+| 11       | 8.4    | 415004880      | 648167031           |
+| 1        | 8.3    | 191796233      | 170162503           |
+| 7        | 7.2    | 244082982      | 217900167           |
+| 10       | 8.3    | 293004164      | 438338580           |
+| 4        | 8.1    | 289916256      | 272900000           |
+| 2        | 7.2    | 162798565      | 200600000           |
+| 13       | 7.2    | 237283207      | 301700000           |
+------------------------------------------------------------
+##### Tasks
+1. Find the domestic and international sales for each movie 
+```SQL
+    SELECT title, Domestic_sales, International_sales FROM Movies
+        INNER JOIN Boxoffice
+            on id == Movie_id;
+```
+2. Show the sales numbers for each movie that did better internationally rather than domestically 
+```SQL
+    SELECT title, Domestic_sales, International_sales FROM Movies
+        INNER JOIN Boxoffice
+            on id == Movie_id
+            WHERE International_sales > Domestic_sales;
+```
+3. List all the movies by their ratings in descending order 
+```SQL
+    SELECT title FROM Movies
+        INNER JOIN Boxoffice
+            on id == Movie_id
+            ORDER BY Rating DESC;
+```
+## SQL Lesson 7: OUTER JOINs
+##### Table: Buildings (Read-Only)
+-------------------------------
+| building_name  |	capacity  |
+-------------------------------
+| 1e	         |    24      |
+| 1w 	         |    32      | 
+| 2e	         |    16      |
+| 2w	         |    20      |
+-------------------------------
+##### Table: Employees (Read-Only)
+------------------------------------------------------
+| role      | name        | building | years_employed |
+|-----------|-------------|----------|----------------|
+| Engineer  | Becky A.    | 1e       | 4              |
+| Engineer  | Dan B.      | 1e       | 2              |
+| Engineer  | Sharon F.   | 1e       | 6              |
+| Engineer  | Dan M.      | 1e       | 4              |
+| Engineer  | Malcom S.   | 1e       | 1              |
+| Artist    | Tylar S.    | 2w       | 2              |
+| Artist    | Sherman D.  | 2w       | 8              |
+| Artist    | Jakob J.    | 2w       | 6              |
+| Artist    | Lillia A.   | 2w       | 7              |
+| Artist    | Brandon J.  | 2w       | 7              |
+| Manager   | Scott K.    | 1e       | 9              |
+| Manager   | Shirlee M.  | 1e       | 3              |
+| Manager   | Daria O.    | 2w       | 6              |
+------------------------------------------------------
+##### Tasks
+1. Find the list of all buildings that have employees 
+```SQL
+    SELECT Building FROM Employees
+        LEFT JOIN Buildings
+            ON Building_name == Building
+        GROUP BY Building_name;
+```
+2. Find the list of all buildings and their capacity 
+```SQL
+    SELECT Building_name, capacity from Buildings;
+```
+3. List all buildings and the distinct employee roles in each building (including empty buildings) 
+```SQL
+    SELECT DISTINCT building_name, role 
+    FROM buildings 
+    LEFT JOIN employees
+        ON building_name = building;
+```
+## Lesson 8: A Short Note on NULLS
+## Lesson 9: Queries with Expressions
+## Lesson 10: Queries with Aggregations (Pt 1)
+## Lesson 11: Queries with Aggregations (Pt 2)
+## Lesson 12: Order of Execution of a Query
+## Lesson 13: Inserting Rows
+## Lesson 14: Updating Rows
+## Lesson 15: Deleting Rows
+## Lesson 16: Creating Tables
+## Lesson 17: Altering Tables
+## Lesson 18: Dropping Tables
