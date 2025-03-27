@@ -351,8 +351,143 @@ SELECT city, population FROM north_american_cities
         ON building_name = building;
 ```
 ## Lesson 8: A Short Note on NULLS
+##### Table: Buildings (Read-Only)
+| building_name | capacity |
+|---------------|----------|
+| 1e            | 24       |
+| 1w            | 32       |
+| 2e            | 16       |
+| 2w            | 20       |
+##### Table: Employees (Read-Only)
+| role      | name        | building | years_employed |
+|-----------|-------------|----------|----------------|
+| Engineer  | Becky A.    | 1e       | 4              |
+| Engineer  | Dan B.      | 1e       | 2              |
+| Engineer  | Sharon F.   | 1e       | 6              |
+| Engineer  | Dan M.      | 1e       | 4              |
+| Engineer  | Malcom S.   | 1e       | 1              |
+| Artist    | Tylar S.    | 2w       | 2              |
+| Artist    | Sherman D.  | 2w       | 8              |
+| Artist    | Jakob J.    | 2w       | 6              |
+| Artist    | Lillia A.   | 2w       | 7              |
+| Artist    | Brandon J.  | 2w       | 7              |
+| Manager   | Scott K.    | 1e       | 9              |
+| Manager   | Shirlee M.  | 1e       | 3              |
+| Manager   | Daria O.    | 2w       | 6              |
+| Engineer  | Yancy I.    |          | 0              |
+| Artist    | Oliver P.   |          | 0              |
+##### Tasks
+1. Find the name and role of all employees who have not been assigned to a building 
+```SQL
+    SELECT Name FROM Employees
+        WHERE Building IS NULL;
+```
+2. Find the names of the buildings that hold no employees
+```SQL
+    SELECT DISTINCT Building_name
+    FROM Buildings 
+    LEFT JOIN Employees
+        ON Building_name = Building
+    WHERE Role IS NULL;
+```
 ## Lesson 9: Queries with Expressions
+##### Table: Movies (Read-Only)
+| id  | title                 | director         | year | length_minutes |
+|-----|-----------------------|------------------|------|----------------|
+| 1   | Toy Story             | John Lasseter    | 1995 | 81             |
+| 2   | A Bug's Life          | John Lasseter    | 1998 | 95             |
+| 3   | Toy Story 2           | John Lasseter    | 1999 | 93             |
+| 4   | Monsters, Inc.        | Pete Docter      | 2001 | 92             |
+| 5   | Finding Nemo          | Andrew Stanton   | 2003 | 107            |
+| 6   | The Incredibles       | Brad Bird        | 2004 | 116            |
+| 7   | Cars                  | John Lasseter    | 2006 | 117            |
+| 8   | Ratatouille           | Brad Bird        | 2007 | 115            |
+| 9   | WALL-E                | Andrew Stanton   | 2008 | 104            |
+| 10  | Up                    | Pete Docter      | 2009 | 101            |
+| 11  | Toy Story 3           | Lee Unkrich      | 2010 | 103            |
+| 12  | Cars 2                | John Lasseter    | 2011 | 120            |
+| 13  | Brave                 | Brenda Chapman   | 2012 | 102            |
+| 14  | Monsters University   | Dan Scanlon      | 2013 | 110            |
+
+##### Table: Boxoffice (Read-Only)
+| movie_id | rating | domestic_sales | international_sales |
+|----------|--------|----------------|---------------------|
+| 5        | 8.2    | 380843261      | 555900000           |
+| 14       | 7.4    | 268492764      | 475066843           |
+| 8        | 8.0    | 206445654      | 417277164           |
+| 12       | 6.4    | 191452396      | 368400000           |
+| 3        | 7.9    | 245852179      | 239163000           |
+| 6        | 8.0    | 261441092      | 370001000           |
+| 9        | 8.5    | 223808164      | 297503696           |
+| 11       | 8.4    | 415004880      | 648167031           |
+| 1        | 8.3    | 191796233      | 170162503           |
+| 7        | 7.2    | 244082982      | 217900167           |
+| 10       | 8.3    | 293004164      | 438338580           |
+| 4        | 8.1    | 289916256      | 272900000           |
+| 2        | 7.2    | 162798565      | 200600000           |
+| 13       | 7.2    | 237283207      |                     |
+###### Tasks
+1. List all movies and their combined sales in millions of dollars
+```SQL
+    SELECT Title, (Domestic_sales + International_sales) / 1000000 AS Total_sales
+    FROM Movies
+    JOIN Boxoffice
+        ON Id = Movie_id;
+```
+2. List all movies and their ratings in percent 
+```SQL
+    SELECT Title, (Rating * 10) as Rating_perc from Movies
+    JOIN Boxoffice
+        ON Id = Movie_id;
+```
+3. List all movies that were released on even number years
+```SQL
+    SELECT Title, (Year % 2) as Even_year FROM Movies
+        WHERE Even_year = 0;
+```
 ## Lesson 10: Queries with Aggregations (Pt 1)
+### Common Aggregate Functions
+| Function               |                                                                Description                                                                                             |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| COUNT(*), COUNT(column)| Counts the number of rows in the group if no column name is specified. Otherwise, counts the number of rows in the group with non-NULL values in the specified column. |
+| MIN(column)            | Finds the smallest numerical value in the specified column for all rows in the group.                                                                                  |
+| MAX(column)            | Finds the largest numerical value in the specified column for all rows in the group.                                                                                   |
+| AVG(column)            | Finds the average numerical value in the specified column for all rows in the group.                                                                                   |
+| SUM(column)            | Finds the sum of all numerical values in the specified column for the rows in the group.                                                                               |
+
+###### Table: Employees
+| role      | name        | building | years_employed |
+|-----------|-------------|----------|----------------|
+| Engineer  | Becky A.    | 1e       | 4              |
+| Engineer  | Dan B.      | 1e       | 2              |
+| Engineer  | Sharon F.   | 1e       | 6              |
+| Engineer  | Dan M.      | 1e       | 4              |
+| Engineer  | Malcom S.   | 1e       | 1              |
+| Artist    | Tylar S.    | 2w       | 2              |
+| Artist    | Sherman D.  | 2w       | 8              |
+| Artist    | Jakob J.    | 2w       | 6              |
+| Artist    | Lillia A.   | 2w       | 7              |
+| Artist    | Brandon J.  | 2w       | 7              |
+| Manager   | Scott K.    | 1e       | 9              |
+| Manager   | Shirlee M.  | 1e       | 3              |
+| Manager   | Daria O.    | 2w       | 6              |
+###### Tasks
+1. Find the longest time that an employee has been at the studio 
+```SQL
+    SELECT MAX(years_employed) FROM Employees;
+```
+2. For each role, find the average number of years employed by employees in that role 
+```SQL
+    SELECT role, AVG(years_employed) as Average_years
+    FROM Employees
+    GROUP BY role;
+```
+3. Find the total number of employee years worked in each building 
+```SQL
+    SELECT Building, SUM(years_employed) as Total_years
+    FROM Employees
+    GROUP BY Building;
+```
 ## Lesson 11: Queries with Aggregations (Pt 2)
 ## Lesson 12: Order of Execution of a Query
 ## Lesson 13: Inserting Rows
