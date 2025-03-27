@@ -520,7 +520,8 @@ SELECT city, population FROM north_american_cities
 ```SQL
     SELECT Role, SUM(years_employed) FROM Employees
         WHERE Role = "Engineer";
-```## Lesson 12: Order of Execution of a Query
+```
+## Lesson 12: Order of Execution of a Query
 ## Lesson 13: Inserting Rows
 ## Lesson 14: Updating Rows
 ## Lesson 15: Deleting Rows
