@@ -489,7 +489,38 @@ SELECT city, population FROM north_american_cities
     GROUP BY Building;
 ```
 ## Lesson 11: Queries with Aggregations (Pt 2)
-## Lesson 12: Order of Execution of a Query
+##### Table: Employees
+| role      | name        | building | years_employed |
+|-----------|-------------|----------|----------------|
+| Engineer  | Becky A.    | 1e       | 4              |
+| Engineer  | Dan B.      | 1e       | 2              |
+| Engineer  | Sharon F.   | 1e       | 6              |
+| Engineer  | Dan M.      | 1e       | 4              |
+| Engineer  | Malcom S.   | 1e       | 1              |
+| Artist    | Tylar S.    | 2w       | 2              |
+| Artist    | Sherman D.  | 2w       | 8              |
+| Artist    | Jakob J.    | 2w       | 6              |
+| Artist    | Lillia A.   | 2w       | 7              |
+| Artist    | Brandon J.  | 2w       | 7              |
+| Manager   | Scott K.    | 1e       | 9              |
+| Manager   | Shirlee M.  | 1e       | 3              |
+| Manager   | Daria O.    | 2w       | 6              |
+##### Tasks:
+1. Find the number of Artists in the studio (without a HAVING clause) 
+```SQL
+    SELECT COUNT(Name) FROM Employees
+        WHERE Role = "Artist";
+```
+2. Find the number of Employees of each role in the studio 
+```SQL
+    SELECT Role, COUNT(*)FROM Employees
+    GROUP BY Role;
+```
+3. Find the total number of years employed by all Engineers 
+```SQL
+    SELECT Role, SUM(years_employed) FROM Employees
+        WHERE Role = "Engineer";
+```## Lesson 12: Order of Execution of a Query
 ## Lesson 13: Inserting Rows
 ## Lesson 14: Updating Rows
 ## Lesson 15: Deleting Rows
