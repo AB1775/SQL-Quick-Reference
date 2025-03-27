@@ -522,8 +522,124 @@ SELECT city, population FROM north_american_cities
         WHERE Role = "Engineer";
 ```
 ## Lesson 12: Order of Execution of a Query
+### Order of Execution
+| Order | Clause          |
+|-------|-----------------|
+| 1     | FROM and JOINs  |
+| 2     | WHERE           |
+| 3     | GROUP BY        |
+| 4     | HAVING          |
+| 5     | SELECT          |
+| 6     | DISTINCT        |
+| 7     | ORDER BY        |
+| 8     | LIMIT / OFFSET  |
+#### Table: Movies (Read-Only)
+| id  | title                 | director         | year | length_minutes |
+|-----|-----------------------|------------------|------|----------------|
+| 1   | Toy Story             | John Lasseter    | 1995 | 81             |
+| 2   | A Bug's Life          | John Lasseter    | 1998 | 95             |
+| 3   | Toy Story 2           | John Lasseter    | 1999 | 93             |
+| 4   | Monsters, Inc.        | Pete Docter      | 2001 | 92             |
+| 5   | Finding Nemo          | Andrew Stanton   | 2003 | 107            |
+| 6   | The Incredibles       | Brad Bird        | 2004 | 116            |
+| 7   | Cars                  | John Lasseter    | 2006 | 117            |
+| 8   | Ratatouille           | Brad Bird        | 2007 | 115            |
+| 9   | WALL-E                | Andrew Stanton   | 2008 | 104            |
+| 10  | Up                    | Pete Docter      | 2009 | 101            |
+| 11  | Toy Story 3           | Lee Unkrich      | 2010 | 103            |
+| 12  | Cars 2                | John Lasseter    | 2011 | 120            |
+| 13  | Brave                 | Brenda Chapman   | 2012 | 102            |
+| 14  | Monsters University   | Dan Scanlon      | 2013 | 110            |
+#### Table: Boxoffice (Read-Only)
+| movie_id | rating | domestic_sales | international_sales |
+|----------|--------|----------------|---------------------|
+| 5        | 8.2    | 380843261      | 555900000           |
+| 14       | 7.4    | 268492764      | 475066843           |
+| 8        | 8.0    | 206445654      | 417277164           |
+| 12       | 6.4    | 191452396      | 368400000           |
+| 3        | 7.9    | 245852179      | 239163000           |
+| 6        | 8.0    | 261441092      | 370001000           |
+| 9        | 8.5    | 223808164      | 297503696           |
+| 11       | 8.4    | 415004880      | 648167031           |
+| 1        | 8.3    | 191796233      | 170162503           |
+| 7        | 7.2    | 244082982      | 217900167           |
+| 10       | 8.3    | 293004164      | 438338580           |
+| 4        | 8.1    | 289916256      | 272900000           |
+| 2        | 7.2    | 162798565      | 200600000           |
+| 13       | 7.2    | 237283207      | 301700000           |
+##### Tasks
+1. Find the number of movies each director has directed 
+```SQL
+    SELECT Director, COUNT(*) FROM Movies
+    GROUP BY Director;
+```
+2. Find the total domestic and international sales that can be attributed to each director
+```SQL
+    SELECT Director, SUM(Domestic_sales + International_sales) as Total_sales
+    FROM Movies
+        INNER JOIN Boxoffice
+            ON id = Movie_id
+    GROUP BY Director;
+``` 
 ## Lesson 13: Inserting Rows
-## Lesson 14: Updating Rows
+#### Table: Movies (Read-Only)
+| id  | title         | director         | year | length_minutes |
+|-----|---------------|------------------|------|----------------|
+| 1   | Toy Story     | John Lasseter    | 1995 | 81             |
+| 2   | A Bug's Life  | John Lasseter    | 1998 | 95             |
+| 3   | Toy Story 2   | John Lasseter    | 1999 | 93             |
+#### Table: Boxoffice (Read-Only)
+| movie_id | rating | domestic_sales | international_sales |
+|----------|--------|----------------|---------------------|
+| 3        | 7.9    | 245852179      | 239163000           |
+| 1        | 8.3    | 191796233      | 170162503           |
+| 2        | 7.2    | 162798565      | 200600000           |
+#### Tasks
+1. Add the studio's new production, Toy Story 4 to the list of movies (you can use any director) 
+```SQL
+    INSERT INTO Movies VALUES (4, "Toy Story 4", "John Lasseter", 1111, 90);
+```
+2. Toy Story 4 has been released to critical acclaim! It had a rating of 8.7, and made 340 million domestically and 270 million internationally. Add the record to the BoxOffice table. 
+```SQL
+    INSERT INTO Boxoffice VALUES (4, 8.7, 34000000, 270000000);
+```
+## Lesson 14: Updating 
+#### Table: Movies
+| id  | title                 | director         | year | length_minutes |
+|-----|-----------------------|------------------|------|----------------|
+| 1   | Toy Story             | John Lasseter    | 1995 | 81             |
+| 2   | A Bug's Life          | El Directore     | 1998 | 95             |
+| 3   | Toy Story 2           | John Lasseter    | 1899 | 93             |
+| 4   | Monsters, Inc.        | Pete Docter      | 2001 | 92             |
+| 5   | Finding Nemo          | Andrew Stanton   | 2003 | 107            |
+| 6   | The Incredibles       | Brad Bird        | 2004 | 116            |
+| 7   | Cars                  | John Lasseter    | 2006 | 117            |
+| 8   | Ratatouille           | Brad Bird        | 2007 | 115            |
+| 9   | WALL-E                | Andrew Stanton   | 2008 | 104            |
+| 10  | Up                    | Pete Docter      | 2009 | 101            |
+| 11  | Toy Story 8           | El Directore     | 2010 | 103            |
+| 12  | Cars 2                | John Lasseter    | 2011 | 120            |
+| 13  | Brave                 | Brenda Chapman   | 2012 | 102            |
+| 14  | Monsters University   | Dan Scanlon      | 2013 | 110            |
+#### Tasks
+1. The director for A Bug's Life is incorrect, it was actually directed by John Lasseter 
+```SQL
+    UPDATE Movies
+    SET Director = "John Lasseter"
+    WHERE Title = "A Bug's Life";
+```
+2. The year that Toy Story 2 was released is incorrect, it was actually released in 1999 
+```SQL
+    UPDATE Movies
+    SET Year = 1999
+    WHERE Title = "Toy Story 2";
+```
+3. Both the title and director for Toy Story 8 is incorrect! The title should be "Toy Story 3" and it was directed by Lee Unkrich 
+```SQL
+    UPDATE movies
+    SET Title = "Toy Story 3", Director = "Lee Unkrich"
+    WHERE id = 11;
+```
 ## Lesson 15: Deleting Rows
 ## Lesson 16: Creating Tables
 ## Lesson 17: Altering Tables
