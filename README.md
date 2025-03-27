@@ -425,7 +425,7 @@ SELECT city, population FROM north_american_cities
 | 10       | 8.3    | 293004164      | 438338580           |
 | 4        | 8.1    | 289916256      | 272900000           |
 | 2        | 7.2    | 162798565      | 200600000           |
-| 13       | 7.2    | 237283207      |                     |
+| 13       | 7.2    | 237283207      | 301700000           |
 ###### Tasks
 1. List all movies and their combined sales in millions of dollars
 ```SQL
