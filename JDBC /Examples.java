@@ -118,7 +118,7 @@ public class Main {
     }
     
     public static void main(String[] args) throws Exception {
-        String url = "jdbc:mysql://loocalhost:3306/classicmodels"; // Database URL
+        String url = ""; // Database URL
 
         // [!] Instead of hardcoding secrets, use AWS Secrets Manager, Azure Key Vault,
         // Spring, or a Config File [!]
