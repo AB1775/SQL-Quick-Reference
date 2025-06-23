@@ -135,7 +135,13 @@ public class Main {
         // maintenance [!]
         try {
             con = DriverManager.getConnection(url, username, password);
-            System.out.println("[+] Connection Established...");
+            con.setReadOnly(true);
+
+            if (con.isReadOnly()) {
+                System.out.println("[+] Read-Only Connection Established...");
+            } else {
+                System.out.println("[!] Connection IS NOT Read-Only");
+            }
         } catch (Exception e) {
             System.err.println(e);
         } finally {
