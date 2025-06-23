@@ -119,6 +119,7 @@ public class Main {
     
     public static void main(String[] args) throws Exception {
         String url = ""; // Database URL
+        Connection con = null;
 
         // [!] Instead of hardcoding secrets, use AWS Secrets Manager, Azure Key Vault,
         // Spring, or a Config File [!]
@@ -132,10 +133,19 @@ public class Main {
         // Establishing a Connection
         // [!] DataSource is preferred over DriverManager for scalability and
         // maintenance [!]
-        try (Connection con = DriverManager.getConnection(url, username, password)) {
+        try {
+            con = DriverManager.getConnection(url, username, password);
             System.out.println("[+] Connection Established...");
         } catch (Exception e) {
             System.err.println(e);
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (Exception e) {
+                    System.err.println(e);
+                }
+            }
         }
     }
 }
