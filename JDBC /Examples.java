@@ -114,7 +114,21 @@ public class Examples { //
             System.out.println("Order Number: " + orderNumber + " for Customer Number: " + customerNumber);
         }
     }
-    
+
+    public static void listTables(Connection con) throws Exception {
+        PreparedStatement listTables = con.prepareStatement("SHOW TABLES;");
+        ResultSet rs = listTables.executeQuery();
+
+        System.out.println("--------------------------");
+        System.out.println("|   Tables in Database   |");
+        System.out.println("--------------------------");
+
+        while (rs.next()) {
+            String tableName = rs.getString("Tables_in_classicmodels");
+            System.out.println("- " + tableName);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         String url = ""; // Database URL
         Connection con = null;
