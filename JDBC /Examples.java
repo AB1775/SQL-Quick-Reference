@@ -135,6 +135,12 @@ public class Examples { //
         createTable.execute();
     }
 
+    public static void deleteTable(Connection con, String tableName) throws Exception {
+        PreparedStatement deleteTable = con.prepareStatement("DELETE TABLE classicmodes.?;");
+        deleteTable.setString(1, tableName);
+        deleteTable.execute();
+    }
+
     public static void main(String[] args) throws Exception {
         String url = ""; // Database URL
         Connection con = null;
