@@ -3,9 +3,7 @@ package com.database;
 import java.sql.*;
 import java.util.Scanner;
 
-public class Main {
-    /////////////////////////////
-    // Misc. Example Functions //
+public class Examples { //
     /////////////////////////////
     public static void getCustCity(Connection con) throws Exception {
         PreparedStatement getCity = con.prepareStatement(
