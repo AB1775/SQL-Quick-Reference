@@ -129,6 +129,12 @@ public class Examples { //
         }
     }
 
+    public static void createEmptyTable(Connection con, String tableName) throws Exception {
+        PreparedStatement createTable = con.prepareStatement("CREATE TABLE classicmodels.? ();");
+        createTable.setString(1, tableName);
+        createTable.execute();
+    }
+
     public static void main(String[] args) throws Exception {
         String url = ""; // Database URL
         Connection con = null;
